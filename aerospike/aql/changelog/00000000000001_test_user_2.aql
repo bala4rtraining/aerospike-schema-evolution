@@ -1,0 +1,1 @@
+insert into auto-migrate-test.test_users (PK, name) values ('2297ee60-c1a2-4b8b-b042-48866bdb7704','test_generated_user_name_2');

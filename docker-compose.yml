@@ -1,0 +1,33 @@
+version: '2.1'
+
+services:
+  aerospike:
+    image: aerospike/aerospike-server:4.3.1.4
+    container_name: aerospike
+    ports:
+    - 3000:3000
+    - 3001:3001
+    - 3002:3002
+    - 3003:3003
+    environment:
+    - NAMESPACE=auto-migrate-test
+    - REPL_FACTOR=1
+    - MEM_GB=1
+    - DEFAULT_TTL=5d
+    - STORAGE_GB=1
+  aerospike-migration:
+    container_name: aerospike-migration
+    environment:
+    - AEROSPIKE_HOST=aerospike:3000
+    - AEROSPIKE_SCHEMA_VERSION_NAMESPACE=auto-migrate-test
+    - USER=docker-aerospike-migration
+    - DEBUG_LOG=1
+    build:
+      context: ./
+      dockerfile: aerospike/Aerospike-Migration.Dockerfile
+    volumes:
+    - ./aerospike/aql:/aql:ro
+    links:
+      - aerospike
+    depends_on:
+    - aerospike
